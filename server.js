@@ -8,3 +8,10 @@ const app = express();
 
 const apiRoutes = require("./routes/api-routes");
 const htmlRoutes = require("./routes/html-routes");
+
+// Middleware
+// parses JSON and urlencoded form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static("public"));
