@@ -20,3 +20,8 @@ app.use("/static", express.static(path.join(__dirname, "public")));
 // adds routers to middleware handling path
 app.use(apiRoutes);
 app.use(htmlRoutes);
+
+// set up server for app to run
+app.listen(PORT, () =>
+  console.log(`App listening at http://localhost:${PORT}`)
+);
