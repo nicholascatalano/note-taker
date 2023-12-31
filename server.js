@@ -10,8 +10,13 @@ const apiRoutes = require("./routes/api-routes");
 const htmlRoutes = require("./routes/html-routes");
 
 // Middleware
+
 // parses JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static("public"));
+app.use("/static", express.static(path.join(__dirname, "public")));
+
+// adds routers to middleware handling path
+app.use(apiRoutes);
+app.use(htmlRoutes);
