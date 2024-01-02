@@ -37,3 +37,5 @@ router.post("/api/notes", (req, res) => {
     });
   });
 });
+
+module.exports = router;
