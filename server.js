@@ -48,25 +48,20 @@ app.post("/api/notes", (req, res) => {
   res.json(db);
 });
 
-// delete route
-app.delete("/api/notes/:id", (req, res) => {
-  const newDatabase = db.filter((note) => note.id !== req.params.id);
-
-  // update the db.json file to reflect the modified notes array
-  fs.writeFileSync("./db/db.json", JSON.stringify(newDatabase));
-
-  // send that removed note object back to user
-  readFile.json(newDatabase);
-});
-
-
 // HTML Routes
 
 // get route for home page
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 // get route for notes page
-
+app.get("/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "notes.html"));
+});
 // get route for wildcard page
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 // set up server for app to run
 app.listen(PORT, () =>
