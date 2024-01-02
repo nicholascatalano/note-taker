@@ -1,25 +1,52 @@
 // DEPENDENCIES
-const express = require("express");
+const fs = require("fs");
 const path = require("path");
-
-const PORT = process.env.PORT || 3001;
+const express = require("express");
+const db = require("./db/db.json");
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 
-const apiRoutes = require("./routes/api-routes");
-const htmlRoutes = require("./routes/html-routes");
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 
-// parses JSON and urlencoded form data
-app.use(express.json());
+// express creates route for files in public folder, giving a route of '/'
+app.use(express.static("public"));
+
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use("/static", express.static(path.join(__dirname, "public")));
+// API Routes
 
-// adds routers to middleware handling path
-app.use(apiRoutes);
-app.use(htmlRoutes);
+// get route
+app.get("/api/notes", (req, res) => {
+  fs.readFile("./db/db.json", (err, data) => {
+    ///error logging
+    if (err) throw err;
+    let newData = JSON.parse(data);
+    //Returns new database
+    res.json(newData);
+  });
+});
+
+// post route
+app.post("/api/notes", (req, res) => {
+  //grabs notes from body of request
+  const newNote = req.body;
+
+  //gives each note a random ID
+  newNote.id = uuidv4();
+
+  //adds the note object to the array
+  db.push(newNote);
+
+  //update the json file with the new object
+  fs.writeFileSync("./db/db.json", JSON.stringify(db));
+
+  //responds with the note object used
+  res.json(db);
+});
 
 // set up server for app to run
 app.listen(PORT, () =>
