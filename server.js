@@ -22,31 +22,33 @@ app.use(express.json());
 // get route
 app.get("/api/notes", (req, res) => {
   fs.readFile("./db/db.json", (err, data) => {
-    ///error logging
+    // if error, throw
     if (err) throw err;
     let newData = JSON.parse(data);
-    //Returns new database
+    // new data is returned in JSON
     res.json(newData);
   });
 });
 
 // post route
 app.post("/api/notes", (req, res) => {
-  //grabs notes from body of request
+  // saves body of request to newNote const
   const newNote = req.body;
 
-  //gives each note a random ID
+  // uses npm uuidv4 to add unique id to newNote
   newNote.id = uuidv4();
 
-  //adds the note object to the array
+  // pushes new note to db.json
   db.push(newNote);
 
-  //update the json file with the new object
+  // rewrites file using new database
   fs.writeFileSync("./db/db.json", JSON.stringify(db));
 
-  //responds with the note object used
+  // returns new json object
   res.json(db);
 });
+
+
 
 // set up server for app to run
 app.listen(PORT, () =>
